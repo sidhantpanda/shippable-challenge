@@ -1,0 +1,16 @@
+<html lang="en">
+<head>
+    <% include ../partials/header %>
+</head>
+<body class="container">
+
+<h1><% user %> - <% repo %></h1>
+
+<div>
+  <h1>Issues: </h1>
+  <br/>
+  <% JSON.stringify(issues) %>
+</div>
+
+</body>
+</html>
