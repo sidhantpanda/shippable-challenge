@@ -85,7 +85,7 @@ function getIssues(startHour, endHour, issues) {
         } else if ((now - (endHour * 60 * 60 * 1000)) < issueDate) {
           result.push(issues[i])
         }
-      }  
+      }
     }
   }
   return result
@@ -111,6 +111,13 @@ function getGithubRepo(url) {
   var path = URLParser.parse(url).path
   var firstOccurence = path.indexOf("/")
   var secondOccurence = path.indexOf("/", firstOccurence+1)
+  var last1 = path.indexOf("/", secondOccurence+1)
+  var last2 = path.indexOf("#", secondOccurence+1)
+  if (last1 > 0) {
+    return path.substring(secondOccurence+1, last1)
+  } else if (last2 > 0) {
+    return path.substring(secondOccurence+1, last2)
+  }
   return path.substring(secondOccurence+1)
 }
 
