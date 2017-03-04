@@ -14,7 +14,6 @@ app.set('view engine', 'ejs')
 app.set('port', (process.env.PORT || 3000))
 
 app.get('/', function (req, res) {
-  // res.send("ok")
   res.render('pages/index')
 })
 
@@ -37,15 +36,16 @@ app.post('/result', function (req, res) {
 
     githubHelper.checkIfRepoExists(user, repo, function(status, body) {
       if (status === 200) {
-        githubHelper.getOpenIssues(user, repo, function (error, response) {
+        githubHelper.getOpenIssues(user, repo, function (error, issues) {
+          console.log("Total: " + issues.length)
           if (error) {
             res.render('pages/error', {
-              error: "Some error occurred"
+              error: error
             })
           } else {
-            var issues24h = getIssues(0, 24, response)
-            var issues7d = getIssues(24, 7*24, response)
-            var issuesO = getIssues(7*24, -1, response)
+            var issues24h = getIssues(0, 24, issues)
+            var issues7d = getIssues(24, 7*24, issues)
+            var issuesO = getIssues(7*24, -1, issues)
             // console.log(JSON.stringify(response))
             res.render('pages/result', {
               error: error,
@@ -53,18 +53,20 @@ app.post('/result', function (req, res) {
               repo: repo,
               issues24h: issues24h,
               issues7d: issues7d,
-              issuesO: issuesO
+              issuesO: issuesO,
             })
 
           }
         })
       } else {
+        console.log("2")
         res.render('pages/error', {
           error: "Not a github repo"
         })
       }
     })
   } else {
+    console.log("1")
     res.render('pages/error', {
       error: "Not a github repo"
     })
@@ -76,12 +78,14 @@ function getIssues(startHour, endHour, issues) {
   var now = new Date();
   for(var i=0; i<issues.length; i++) {
     var issueDate = new Date(issues[i].created_at)
-    if ((now - (startHour * 60 * 60 * 1000)) > issueDate) {
-      if (endHour === -1) {
-        result.push(issues[i])
-      } else if ((now - (endHour * 60 * 60 * 1000)) < issueDate) {
-        result.push(issues[i])
-      }
+    if (issues[i].pull_request == null) {
+      if ((now - (startHour * 60 * 60 * 1000)) > issueDate) {
+        if (endHour === -1) {
+          result.push(issues[i])
+        } else if ((now - (endHour * 60 * 60 * 1000)) < issueDate) {
+          result.push(issues[i])
+        }
+      }  
     }
   }
   return result

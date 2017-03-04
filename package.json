@@ -16,9 +16,11 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/sidhant/shippable-test#readme",
   "dependencies": {
+    "async": "^2.1.5",
     "body-parser": "^1.17.0",
     "ejs": "^2.5.6",
     "express": "^4.15.0",
+    "parse-link-header": "^0.4.1",
     "request": "^2.79.0"
   }
 }
