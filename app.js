@@ -5,19 +5,27 @@ var URLParser = require('url')
 var githubHelper = require('./custom_modules/github-helper')
 
 var app = express()
-app.set('view engine', 'ejs')
-app.set('port', (process.env.PORT || 5000))
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/semantic', express.static(path.join(__dirname, 'semantic')))
 
+app.set('view engine', 'ejs')
+app.set('port', (process.env.PORT || 3000))
+
 app.get('/', function (req, res) {
+  // res.send("ok")
   res.render('pages/index')
 })
 
 app.get('/check', function(req, res) {
-  res.render('pages/error', {
-    error: "Some error occurred"
+  var error = "fff"
+  console.log(error)
+  res.render('pages/result', {
+    error: error,
+    user: "fefe",
+    repo: "femne",
+    issues: "fejen"
   })
 })
 
@@ -35,10 +43,19 @@ app.post('/result', function (req, res) {
               error: "Some error occurred"
             })
           } else {
-            // console.log(JSON.stringify(response)
-            res.render('pages/error', {
-              error: "Not a github repo"
+            var issues24h = getIssues(0, 24, response)
+            var issues7d = getIssues(24, 7*24, response)
+            var issuesO = getIssues(7*24, -1, response)
+            // console.log(JSON.stringify(response))
+            res.render('pages/result', {
+              error: error,
+              user: user,
+              repo: repo,
+              issues24h: issues24h,
+              issues7d: issues7d,
+              issuesO: issuesO
             })
+
           }
         })
       } else {
@@ -53,6 +70,22 @@ app.post('/result', function (req, res) {
     })
   }
 })
+
+function getIssues(startHour, endHour, issues) {
+  var result = []
+  var now = new Date();
+  for(var i=0; i<issues.length; i++) {
+    var issueDate = new Date(issues[i].created_at)
+    if ((now - (startHour * 60 * 60 * 1000)) > issueDate) {
+      if (endHour === -1) {
+        result.push(issues[i])
+      } else if ((now - (endHour * 60 * 60 * 1000)) < issueDate) {
+        result.push(issues[i])
+      }
+    }
+  }
+  return result
+}
 
 function isValidGithubRepo(url) {
   var parsed = URLParser.parse(url)
