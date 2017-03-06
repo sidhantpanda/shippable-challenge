@@ -3,15 +3,12 @@
     <% include ../partials/header %>
 </head>
 <body class="container">
-
-<h1><%= user %> - <%= repo %></h1>
-
-<div>
-  <h3>Last 24 hours: <%= issues24h.length %></h3>
-  <h3>Last 7 Days: <%= issues7d.length %></h3>
-  <h3>Older: <%= issuesO.length %></h3>
-  <br/>
-</div>
-
+  <h1><%= user %> - <%= repo %></h1>
+  <div>
+    <h3>Last 24 hours: <%= issues24h.length %></h3>
+    <h3>Last 7 Days: <%= issues7d.length %></h3>
+    <h3>Older: <%= issuesO.length %></h3>
+    <br/>
+  </div>
 </body>
 </html>

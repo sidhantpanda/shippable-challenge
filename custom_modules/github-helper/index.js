@@ -38,7 +38,6 @@ module.exports = {
     var thisResponse = null
 
     async.doWhilst(function(callback) {
-      console.log("URL : " + options.url)
       request(options, function(error, response, body) {
         if (error) {
           callback(error, null)

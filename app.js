@@ -17,17 +17,6 @@ app.get('/', function (req, res) {
   res.render('pages/index')
 })
 
-app.get('/check', function(req, res) {
-  var error = "fff"
-  console.log(error)
-  res.render('pages/result', {
-    error: error,
-    user: "fefe",
-    repo: "femne",
-    issues: "fejen"
-  })
-})
-
 app.post('/result', function (req, res) {
   var url = req.body.url;
   if (isValidGithubRepo(url)) {
@@ -59,14 +48,12 @@ app.post('/result', function (req, res) {
           }
         })
       } else {
-        console.log("2")
         res.render('pages/error', {
           error: "Not a github repo"
         })
       }
     })
   } else {
-    console.log("1")
     res.render('pages/error', {
       error: "Not a github repo"
     })
